@@ -5,7 +5,7 @@ An enterprise-grade JSON Schema validation engine designed for carrier-side P&C 
 ## Repository Structure
 
 ```text
-claims-triage-suite/
+claims-litigation-triage-suite/
 ├── schemas/
 │   └── litigation_defense.json   # Schema for court service, statutory deadlines & ROR flags
 ├── scripts/
