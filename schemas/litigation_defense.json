@@ -1,11 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "LitigationNewSuit",
+  "title": "CarrierLitigationDefenseIntake",
   "type": "object",
   "properties": {
     "case_style": {
       "type": "string",
-      "description": "Plaintiff v. Defendant"
+      "description": "Plaintiff v. Carrier / Insured"
     },
     "court_jurisdiction": {
       "type": "string"
@@ -21,8 +21,11 @@
     "policy_number": {
       "type": "string"
     },
-    "requires_immediate_stay": {
+    "reservation_of_rights_issued": {
       "type": "boolean"
+    },
+    "assigned_defense_counsel": {
+      "type": "string"
     }
   },
   "required": [
@@ -30,7 +33,8 @@
     "court_jurisdiction",
     "date_served",
     "statutory_response_deadline",
-    "policy_number"
+    "policy_number",
+    "reservation_of_rights_issued"
   ],
   "additionalProperties": false
 }
