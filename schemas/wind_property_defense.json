@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WindPropertyDefenseClaim",
+  "type": "object",
+  "properties": {
+    "policy_number": {
+      "type": "string"
+    },
+    "date_of_loss": {
+      "type": "string",
+      "format": "date"
+    },
+    "wind_speed_mph": {
+      "type": "number"
+    },
+    "pre_existing_wear_tear_flag": {
+      "type": "boolean"
+    },
+    "carrier_ia_estimate_variance": {
+      "type": "number"
+    },
+    "proof_of_loss_received": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "policy_number",
+    "date_of_loss",
+    "pre_existing_wear_tear_flag",
+    "proof_of_loss_received"
+  ],
+  "additionalProperties": false
+}
