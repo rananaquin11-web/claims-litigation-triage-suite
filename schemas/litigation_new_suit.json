@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LitigationNewSuit",
+  "type": "object",
+  "properties": {
+    "case_style": {
+      "type": "string",
+      "description": "Plaintiff v. Defendant"
+    },
+    "court_jurisdiction": {
+      "type": "string"
+    },
+    "date_served": {
+      "type": "string",
+      "format": "date"
+    },
+    "statutory_response_deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "policy_number": {
+      "type": "string"
+    },
+    "requires_immediate_stay": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "case_style",
+    "court_jurisdiction",
+    "date_served",
+    "statutory_response_deadline",
+    "policy_number"
+  ],
+  "additionalProperties": false
+}
