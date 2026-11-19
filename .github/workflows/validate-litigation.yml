@@ -1,0 +1,34 @@
+name: Validate litigation payload
+
+on:
+  push:
+    paths:
+      - "schemas/**"
+      - "tests/**"
+      - "scripts/**"
+      - ".github/workflows/validate-litigation.yml"
+  pull_request:
+    paths:
+      - "schemas/**"
+      - "tests/**"
+      - "scripts/**"
+      - ".github/workflows/validate-litigation.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install validation dependency
+        run: python -m pip install jsonschema
+
+      - name: Validate litigation test payload
+        run: python scripts/validate_payload.py
