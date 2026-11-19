@@ -35,6 +35,10 @@ The goal is to illustrate structured intake, data-quality controls, and exceptio
 
 The classifier does not independently decide when legal or coverage review is required. A calling workflow must supply any manual-review reasons. These labels describe data and workflow handling, not legal conclusions or claim decisions.
 
+## Exception ownership and handoffs
+
+The [Exception Ownership and Handoff Matrix](docs/exception-ownership-handoff-matrix.md) proposes an owner, action, exit criteria, and escalation path for each workflow status. It also outlines a minimum handoff record and operating controls. Role names and service levels are illustrative and must be adapted to the organization's actual authority structure and procedures.
+
 ## Repository structure
 
 ```text
@@ -112,4 +116,4 @@ The project is presented as an applied workflow and data-quality demonstration, 
 
 ## Potential next steps
 
-Possible extensions include explicit date-format checking, adding more intake scenarios, documenting ownership and handoff points, and connecting the classification outputs to a clearly defined review queue in a future prototype.
+Possible extensions include explicit date-format checking, adding more intake scenarios, turning the illustrative handoff matrix into configurable routing rules, and connecting the classification outputs to a clearly defined review queue in a future prototype.
