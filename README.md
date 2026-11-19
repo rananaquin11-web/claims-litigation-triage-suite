@@ -1,8 +1,8 @@
 # Claims Litigation Triage Suite
 
-A small, illustrative project that translates selected property and casualty (P&C) litigation intake requirements into a structured data schema and an automated validation check.
+A small, illustrative project that translates selected property and casualty (P&C) litigation intake requirements into a structured data schema, automated validation checks, and basic workflow routing classifications.
 
-The project demonstrates how insurance operations knowledge can be used to define required intake information, make data expectations explicit, and check a sample payload before it moves further through a workflow.
+The project demonstrates how insurance operations knowledge can be used to define required intake information, identify data-quality issues, and route records to an appropriate next step before further workflow processing.
 
 ## Project purpose
 
@@ -14,14 +14,26 @@ Litigation intake involves tracking key case information and time-sensitive mile
 - Whether a reservation of rights has been issued
 - Optional assigned defense counsel
 
-The goal is to illustrate structured intake and data-quality controls. This repository is a prototype, not a production claims system or a legal deadline calculator.
+The goal is to illustrate structured intake, data-quality controls, and exception handling. This repository is a prototype, not a production claims system or a legal deadline calculator.
 
 ## How it works
 
-1. **Define the data requirements.** The JSON Schema in `schemas/litigation_defense.json` specifies the accepted fields, their data types, required fields, and whether additional properties are allowed.
+1. **Define the data requirements.** The JSON Schema in `schemas/litigation_defense.json` specifies accepted fields, data types, required fields, and whether additional properties are allowed.
 2. **Provide a sample intake record.** `tests/test_litigation.json` contains synthetic example data.
-3. **Run the validator.** `scripts/validate_payload.py` loads the schema and sample JSON, validates the payload, and returns a success or failure result.
-4. **Run the check automatically.** GitHub Actions runs the validator when relevant schema, test, or script files change, and supports manual workflow dispatch.
+3. **Validate the record.** `scripts/validate_payload.py` checks the sample payload against the schema and returns a pass or fail result.
+4. **Classify the workflow status.** `scripts/classify_intake.py` assigns one of four statuses based on schema validation and any explicitly supplied human-review reasons.
+5. **Test the behavior automatically.** GitHub Actions runs the unit tests and validation script when relevant files change, and supports manual workflow dispatch.
+
+## Workflow classifications
+
+| Status | Meaning | Next step |
+|---|---|---|
+| `ready_for_review` | All required fields are present and the payload passes schema validation. | Route for the next review step. |
+| `incomplete` | One or more required fields are missing. | Obtain the missing information. |
+| `needs_correction` | A field fails validation or an unsupported property is present. | Correct the data and validate again. |
+| `manual_review_required` | The payload is valid, but a human-review reason has been supplied. | Send to an appropriate human reviewer. |
+
+The classifier does not independently decide when legal or coverage review is required. A calling workflow must supply any manual-review reasons. These labels describe data and workflow handling, not legal conclusions or claim decisions.
 
 ## Repository structure
 
@@ -33,9 +45,11 @@ claims-litigation-triage-suite/
 ├── schemas/
 │   └── litigation_defense.json
 ├── scripts/
+│   ├── classify_intake.py
 │   └── validate_payload.py
 ├── tests/
-│   └── test_litigation.json
+│   ├── test_litigation.json
+│   └── test_validation.py
 └── README.md
 ```
 
@@ -59,10 +73,11 @@ Requires Python 3.9 or later and the `jsonschema` package.
 
 ```bash
 python -m pip install jsonschema
+python -m unittest discover -s tests -p "test_*.py"
 python scripts/validate_payload.py
 ```
 
-A successful run prints a positive validation result and exits with status code `0`. A schema validation failure prints an error message and exits with status code `1`.
+A successful validation run prints a positive result and exits with status code `0`. A schema validation failure prints an error message and exits with status code `1`.
 
 ## Automated validation
 
@@ -72,13 +87,14 @@ It:
 - Checks out the repository.
 - Sets up Python 3.11.
 - Installs `jsonschema`.
+- Runs the unit tests, including positive and negative validation cases and workflow-classification cases.
 - Runs `python scripts/validate_payload.py`.
 
 [View workflow runs](https://github.com/rananaquin11-web/claims-litigation-triage-suite/actions).
 
 ## Design perspective and contribution
 
-This project is grounded in P&C claims and litigation operations experience. The workflow requirements and example intake structure reflect a domain-focused approach to identifying key information, required fields, and validation checkpoints.
+This project is grounded in P&C claims and litigation operations experience. The workflow requirements and example intake structure reflect a domain-focused approach to identifying key information, required fields, validation checkpoints, exception categories, and human handoffs.
 
 **Role:** Insurance claims/litigation domain design and workflow requirements, with AI-assisted Python implementation and testing.
 
@@ -86,8 +102,9 @@ The project is presented as an applied workflow and data-quality demonstration, 
 
 ## Scope and limitations
 
-- The repository validates one synthetic sample payload against one litigation intake schema.
-- It does not connect to a claims platform, court system, docket, or external data source.
+- The repository uses one synthetic sample payload and one litigation intake schema.
+- The workflow classifier is a small rules-based example. It is not connected to a claims platform, court system, docket, or external data source.
+- Manual-review reasons must be supplied by a calling process; the prototype does not detect legal or coverage issues on its own.
 - It does not calculate or independently verify statutory deadlines.
 - The schema declares date formats, but the current Python validator does not enable JSON Schema format checking. The date strings are therefore not independently verified as calendar dates by this script.
 - It does not evaluate coverage, determine liability, provide legal advice, or make claim decisions.
@@ -95,4 +112,4 @@ The project is presented as an applied workflow and data-quality demonstration, 
 
 ## Potential next steps
 
-Possible extensions include adding negative test cases, enabling explicit date-format checking, expanding schema coverage, and documenting workflow handoffs and exception handling.
+Possible extensions include explicit date-format checking, adding more intake scenarios, documenting ownership and handoff points, and connecting the classification outputs to a clearly defined review queue in a future prototype.
